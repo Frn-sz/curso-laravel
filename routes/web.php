@@ -8,7 +8,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('/series/store', [SeriesController::class, 'store']);
-
-
 Route::resource('/series', SeriesController::class);

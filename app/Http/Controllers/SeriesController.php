@@ -30,8 +30,10 @@ class SeriesController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $serie = Serie::create($request->all());
 
+        $request->validate(['name' => ['required', 'min:3']]);
+
+        $serie = Serie::create($request->all());
 
         return to_route("series.index")
             ->with('success.message', "Série '{$serie->name}' cadastrada com sucesso");;
