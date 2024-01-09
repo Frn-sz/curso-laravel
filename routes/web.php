@@ -8,6 +8,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/series', [SeriesController::class, 'index']);
-Route::get('/series/criar', [SeriesController::class, 'create']);
-Route::post('/series/save', [SeriesController::class, 'store']);
+Route::post('/series/store', [SeriesController::class, 'store']);
+
+
+Route::resource('/series', SeriesController::class);

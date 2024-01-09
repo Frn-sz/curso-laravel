@@ -9,11 +9,13 @@ use Illuminate\View\View;
 
 class SeriesController extends Controller
 {
-    public function index(): View
+    public function index(request $request): View
     {
         $series = Serie::all();
 
-        return view('series.index')->with('series', $series);
+        $success_message = $request->session()->get('success.message');
+
+        return view('series.index')->with('series', $series)->with('success_message', $success_message);
     }
 
     public function create(): View
@@ -21,17 +23,33 @@ class SeriesController extends Controller
         return view('series.create');
     }
 
+    public function edit(Request $request, Serie $series)
+    {
+        return view('series.update')->with('serie', $series);
+    }
+
     public function store(Request $request): RedirectResponse
     {
-        $request->validate(["nome" => "required"]);
+        $serie = Serie::create($request->all());
 
-        $serieName = $request->input("nome");
 
-        $serie = new Serie();
+        return to_route("series.index")
+            ->with('success.message', "Série '{$serie->name}' cadastrada com sucesso");;
+    }
 
-        $serie->nome = $serieName;
-        $serie->save();
-        return redirect("/series");
+    public function update(Request $request, Serie $series): RedirectResponse
+    {
+        $series->update($request->all());
 
+        return to_route("series.index")
+            ->with('success.message', "Série '{$series->name}' atualizada com sucesso'");
+    }
+
+    public function destroy(Serie $series, Request $request): RedirectResponse
+    {
+        $series->delete();
+
+        return to_route('series.index')
+            ->with('success.message', "Série '{$series->name}' removida com sucesso.");
     }
 }
