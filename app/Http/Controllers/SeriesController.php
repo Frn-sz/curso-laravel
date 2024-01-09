@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SeriesFormRequest;
 use App\Models\Serie;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -23,15 +24,14 @@ class SeriesController extends Controller
         return view('series.create');
     }
 
-    public function edit(Request $request, Serie $series)
+    public function edit(Serie $series)
     {
+        dd($series->seasons);
         return view('series.update')->with('serie', $series);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(SeriesFormRequest $request): RedirectResponse
     {
-
-        $request->validate(['name' => ['required', 'min:3']]);
 
         $serie = Serie::create($request->all());
 
@@ -39,7 +39,7 @@ class SeriesController extends Controller
             ->with('success.message', "Série '{$serie->name}' cadastrada com sucesso");;
     }
 
-    public function update(Request $request, Serie $series): RedirectResponse
+    public function update(SeriesFormRequest $request, Serie $series): RedirectResponse
     {
         $series->update($request->all());
 
