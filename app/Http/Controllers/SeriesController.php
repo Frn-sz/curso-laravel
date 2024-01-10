@@ -12,7 +12,7 @@ class SeriesController extends Controller
 {
     public function index(request $request): View
     {
-        $series = Serie::all();
+        $series = Serie::with('seasons')->get();
 
         $success_message = $request->session()->get('success.message');
 
@@ -26,7 +26,6 @@ class SeriesController extends Controller
 
     public function edit(Serie $series)
     {
-        dd($series->seasons);
         return view('series.update')->with('serie', $series);
     }
 
