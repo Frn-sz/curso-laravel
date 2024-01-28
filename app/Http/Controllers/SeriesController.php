@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SeriesFormRequest;
-use App\Models\Episode;
-use App\Models\Season;
 use App\Models\Serie;
+use App\Repositories\SeriesRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class SeriesController extends Controller
 {
+
+    public function __construct(private SeriesRepository $repository)
+    {
+    }
+
     public function index(request $request): View
     {
         $series = Serie::with('seasons')->get();
@@ -26,33 +30,19 @@ class SeriesController extends Controller
         return view('series.create');
     }
 
-    public function edit(Serie $series)
+    public function edit(Serie $series): View
     {
         return view('series.update')->with('serie', $series);
     }
 
     public function store(SeriesFormRequest $request): RedirectResponse
     {
+        $series_data = ['name' => $request->name, 'seasons_qnt' => $request->seasons_qnt, 'episodes_per_season' => $request->episodes_per_season];
 
-        $series = Serie::create($request->all());
-        $seasons = [];
-
-        for ($i = 1; $i <= $request->seasons_qnt; $i++) {
-            $season[] = ['series_id' => $series->id, 'number' => $i];
-        }
-
-        Season::insert($season);
-
-        $episodes = [];
-
-        foreach ($series->seasons as $season)
-            for ($j = 1; $j <= $request->episodes_per_season; $j++)
-                $episodes[] = ['season_id' => $season->id, 'number' => $j];
-
-        Episode::insert($episodes);
+        $series = $this->repository->addSeries($series_data);
 
         return to_route("series.index")
-            ->with('success.message', "Série '{$series->name}' cadastrada com sucesso");;
+            ->with('success.message', "Série '{$series->name}' cadastrada com sucesso");
     }
 
     public function update(SeriesFormRequest $request, Serie $series): RedirectResponse

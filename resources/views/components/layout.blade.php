@@ -20,6 +20,11 @@
     <div class="container">
         <h1>{{ $title }}</h1>
 
+        @isset($successMessage)
+            <div class="alert alert-success mt-2">
+                {{ $successMessage }}
+            </div>
+        @endisset
 
         @if ($errors->any())
 
