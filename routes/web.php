@@ -1,29 +1,31 @@
 <?php
 
-use App\Http\Controllers\EpisodesController;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\SeasonsController;
-use App\Http\Controllers\SeriesController;
-use App\Http\Controllers\UserController;
-use App\Http\Middleware\Authenticator;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
 
-Route::resource('/series', SeriesController::class)->middleware(Authenticator::class);
+Route::get('/', function () {
+    return view('welcome');
+});
 
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/series/{series}/seasons', [SeasonsController::class, 'index'])->name('seasons.index');
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
-Route::get('/seasons/{season}/episodes', [EpisodesController::class, 'index'])->name('episodes.index');
-
-Route::post('/seasons/{season}/episodes', [EpisodesController::class, 'update'])->name('episodes.update');
-
-Route::get('/login', [LoginController::class, 'index'])->name('login');
-
-Route::post('/login', [LoginController::class, 'login'])->name('store');
-
-Route::get('/logout',[LoginController::class,'destroy'])->name('logout');
-
-Route::get('/register', [UserController::class, 'create'])->name('register');
-
-Route::post('/register', [UserController::class, 'store'])->name('user.store');
+require __DIR__.'/auth.php';
