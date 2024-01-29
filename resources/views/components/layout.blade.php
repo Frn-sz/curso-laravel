@@ -3,7 +3,7 @@
 
 <head>
 
-    @vite(['resources/css/app.scss'])
+    @vite(['resources/css/style.scss'])
 
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -12,7 +12,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ $title }} - Controle de Séries</title>
 
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.scss') }}">
 
 </head>
 
@@ -22,7 +22,15 @@
         <a class="navbar-brand" href="#">Navbar</a>
 
         @auth
-            <a href="{{route('logout')}}">Sair</a>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+
+                <x-dropdown-link :href="route('logout')"
+                                 onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                    {{ __('Log Out') }}
+                </x-dropdown-link>
+            </form>
         @endauth
 
         @guest

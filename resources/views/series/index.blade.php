@@ -8,9 +8,9 @@
         @foreach ($series as $serie)
             <li class="list-group-item d-flex justify-content-between align-items-center">
 
-
                 @auth
-                    <a href="{{ route('seasons.index', $serie->id) }}"> @endauth
+                    <a href="{{ route('seasons.index', $serie->id) }}">
+                        @endauth
                         {{ $serie->name }}
                         @auth </a>
                 @endauth
@@ -18,8 +18,7 @@
 
                     @auth
                         <a href="{{ route('series.edit', $serie->id) }}" class="btn btn-primary">E</a>
-
-
+                    
                         <form action="{{ route('series.destroy', $serie->id) }}" method="POST" class="mx-2">
                         @csrf
                             @method('DELETE')
