@@ -8,7 +8,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class SeriesCreated
+class EventCreateSeries
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -17,10 +17,12 @@ class SeriesCreated
      */
     public function __construct(
         public readonly string $seriesName,
-        public readonly int $seriesId,
         public readonly int $seasons_qnt,
         public readonly int $episodes_per_season,
-    ) {
+    )
+
+    {
+        //
     }
 
     /**

@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\SeriesCreated as EventsSeriesCreated;
+use App\Events\EventCreateSeries;
 use App\Http\Middleware\Authenticator;
 use App\Http\Requests\SeriesFormRequest;
-use App\Mail\SeriesCreated;
 use App\Models\Serie;
-use App\Models\User;
 use App\Repositories\SeriesRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
 class SeriesController extends Controller
@@ -43,21 +40,16 @@ class SeriesController extends Controller
 
     public function store(SeriesFormRequest $request): RedirectResponse
     {
-        $series_data = ['name' => $request->name, 'seasons_qnt' => $request->seasons_qnt, 'episodes_per_season' => $request->episodes_per_season];
 
-        $series = $this->repository->addSeries($series_data);
-        
-        $EventSeriesCreated = new \App\Events\SeriesCreated(
-            $series->name,
-            $series->id,
+        EventCreateSeries::dispatch(
+            $request->name,
             $request->seasons_qnt,
             $request->episodes_per_season
         );
-        
-        event($EventSeriesCreated);
+
 
         return to_route("series.index")
-            ->with('success.message', "Série '{$series->name}' cadastrada com sucesso");
+            ->with('success.message', "Série '{$request->name}' cadastrada com sucesso");
     }
 
     public function update(SeriesFormRequest $request, Serie $series): RedirectResponse
