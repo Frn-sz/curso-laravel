@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Models\User;
+use App\Events\SeriesCreated as EventsSeriesCreated;
 use App\Mail\SeriesCreated;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Queue\InteractsWithQueue;
@@ -21,7 +22,7 @@ class EmailUsersAboutSeriesCreated
     /**
      * Handle the event.
      */
-    public function handle(object $event): void
+    public function handle(EventsSeriesCreated $event): void
     {
         $users_to_send = User::all();
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\SeriesCreated as EventsSeriesCreated;
 use App\Http\Middleware\Authenticator;
 use App\Http\Requests\SeriesFormRequest;
 use App\Mail\SeriesCreated;
@@ -45,6 +46,15 @@ class SeriesController extends Controller
         $series_data = ['name' => $request->name, 'seasons_qnt' => $request->seasons_qnt, 'episodes_per_season' => $request->episodes_per_season];
 
         $series = $this->repository->addSeries($series_data);
+        
+        $EventSeriesCreated = new \App\Events\SeriesCreated(
+            $series->name,
+            $series->id,
+            $request->seasons_qnt,
+            $request->episodes_per_season
+        );
+        
+        event($EventSeriesCreated);
 
         return to_route("series.index")
             ->with('success.message', "Série '{$series->name}' cadastrada com sucesso");
