@@ -45,20 +45,6 @@ class SeriesController extends Controller
         $series_data = ['name' => $request->name, 'seasons_qnt' => $request->seasons_qnt, 'episodes_per_season' => $request->episodes_per_season];
 
         $series = $this->repository->addSeries($series_data);
-        
-        $users_to_send = User::all();
-
-        foreach ($users_to_send as $user){
-
-            $email = new SeriesCreated(
-                $series->name,
-                $series->id,
-                $request->seasons_qnt,
-                $request->episodes_per_season
-            );
-
-            Mail::to($user)->send($email);
-        }
 
         return to_route("series.index")
             ->with('success.message', "Série '{$series->name}' cadastrada com sucesso");
