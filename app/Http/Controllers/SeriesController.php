@@ -40,11 +40,13 @@ class SeriesController extends Controller
 
     public function store(SeriesFormRequest $request): RedirectResponse
     {
-
+        dd($request->file('cover'));
+        
         EventCreateSeries::dispatch(
             $request->name,
             $request->seasons_qnt,
-            $request->episodes_per_season
+            $request->episodes_per_season,
+            $request->file('cover')
         );
 
 

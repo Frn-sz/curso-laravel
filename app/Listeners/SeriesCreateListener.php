@@ -24,7 +24,8 @@ class SeriesCreateListener
         $series_data = [
             'name' => $event->seriesName,
             'seasons_qnt' => $event->seasons_qnt,
-            'episodes_per_season' => $event->episodes_per_season
+            'episodes_per_season' => $event->episodes_per_season,
+            'cover' => $event->cover
         ];
 
         $series = $this->repository->addSeries($series_data);

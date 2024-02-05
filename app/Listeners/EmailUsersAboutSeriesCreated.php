@@ -2,12 +2,11 @@
 
 namespace App\Listeners;
 
-use App\Models\User;
 use App\Events\SeriesCreated as EventsSeriesCreated;
 use App\Mail\SeriesCreated;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Queue\InteractsWithQueue;
+use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Mail;
 
 class EmailUsersAboutSeriesCreated implements ShouldQueue
 {
