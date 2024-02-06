@@ -32,6 +32,7 @@ class SeriesCreated extends Mailable
     {
         return new Envelope(
             subject: 'Série criada',
+            
         );
     }
 

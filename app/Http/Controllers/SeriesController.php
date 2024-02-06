@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\EventCreateSeries;
+use App\Events\SeriesDeleted;
 use App\Http\Middleware\Authenticator;
 use App\Http\Requests\SeriesFormRequest;
 use App\Models\Serie;
@@ -40,15 +41,19 @@ class SeriesController extends Controller
 
     public function store(SeriesFormRequest $request): RedirectResponse
     {
-        dd($request->file('cover'));
-        
+
+        $request->validate([
+            'cover' => 'nullable|image|mimes:jpeg,jpg,png,svg,gif'
+        ]);
+
+        $cover_path = $request->file('cover')->store('series_cover', 'public');
+
         EventCreateSeries::dispatch(
             $request->name,
             $request->seasons_qnt,
             $request->episodes_per_season,
-            $request->file('cover')
+            $cover_path
         );
-
 
         return to_route("series.index")
             ->with('success.message', "Série '{$request->name}' cadastrada com sucesso");
@@ -64,6 +69,9 @@ class SeriesController extends Controller
 
     public function destroy(Serie $series, Request $request): RedirectResponse
     {
+        if ($series->cover)
+            SeriesDeleted::dispatch($series->cover);
+
         $series->delete();
 
         return to_route('series.index')
