@@ -19,7 +19,7 @@ class EventCreateSeries
         public readonly string $seriesName,
         public readonly int $seasons_qnt,
         public readonly int $episodes_per_season,
-        public readonly string $cover
+        public readonly string|null $cover
     )
 
     {

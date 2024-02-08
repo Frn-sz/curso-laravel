@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\EventCreateSeries;
+
+    use App\Events\EventCreateSeries;
 use App\Events\SeriesDeleted;
 use App\Http\Middleware\Authenticator;
 use App\Http\Requests\SeriesFormRequest;
@@ -15,8 +16,9 @@ use Illuminate\View\View;
 class SeriesController extends Controller
 {
 
-    public function __construct(private SeriesRepository $repository)
+                  public function __construct(private SeriesRepository $repository)
     {
+
         $this->middleware(Authenticator::class)->except('index');
     }
 
@@ -41,12 +43,13 @@ class SeriesController extends Controller
 
     public function store(SeriesFormRequest $request): RedirectResponse
     {
-
         $request->validate([
-            'cover' => 'nullable|image|mimes:jpeg,jpg,png,svg,gif'
+            'seasons_qnt' => 'required',
+            'episodes_per_season' => 'required',
+            'cover' => 'nullable|image'
         ]);
 
-        $cover_path = $request->file('cover')->store('series_cover', 'public');
+        $cover_path = $request?->file('cover')?->store('series_cover', 'public');
 
         EventCreateSeries::dispatch(
             $request->name,
